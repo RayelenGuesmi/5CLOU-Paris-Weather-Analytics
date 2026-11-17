@@ -1,0 +1,555 @@
+{
+	"name": "NB_Weather_Silver_To_Gold",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark5clou",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2b749fba-eca9-42d0-8e7f-df435776656d"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"8e7d8d07-ff02-4b09-8f3f-6f7af49bd054": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"360b3af6-5730-4988-bab4-3764cf31409d": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11",
+										"1": "14.1",
+										"2": "14.1",
+										"3": "14.1",
+										"4": "84.0",
+										"5": "3.3",
+										"6": "3.3",
+										"7": "1"
+									},
+									{
+										"0": "2026-11-12",
+										"1": "9.04",
+										"2": "8.6",
+										"3": "9.9",
+										"4": "71.4",
+										"5": "15.38",
+										"6": "15.9",
+										"7": "5"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "date",
+										"type": "date"
+									},
+									{
+										"key": "1",
+										"name": "avg_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "min_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "3",
+										"name": "max_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "avg_humidity_pct",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "avg_wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "max_wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "7",
+										"name": "measurement_count",
+										"type": "bigint"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"candidateVariableNames": [
+									"df_gold"
+								],
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"2df2b419-c609-49ea-ad71-784ad1accded": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11",
+										"1": "14.1",
+										"2": "14.1",
+										"3": "14.1",
+										"4": "84.0",
+										"5": "3.3",
+										"6": "3.3",
+										"7": "1"
+									},
+									{
+										"0": "2026-11-12",
+										"1": "9.04",
+										"2": "8.6",
+										"3": "9.9",
+										"4": "71.4",
+										"5": "15.38",
+										"6": "15.9",
+										"7": "5"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "date",
+										"type": "date"
+									},
+									{
+										"key": "1",
+										"name": "avg_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "min_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "3",
+										"name": "max_temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "avg_humidity_pct",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "avg_wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "max_wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "7",
+										"name": "measurement_count",
+										"type": "bigint"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ff645598-62b5-4cf3-bb4a-c94fd01f1c83/resourceGroups/rg-5clou-weather/providers/Microsoft.Synapse/workspaces/syn-5clou-weather/bigDataPools/spark5clou",
+				"name": "spark5clou",
+				"type": "Spark",
+				"endpoint": "https://syn-5clou-weather.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark5clou",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.5",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Projet 5CLOU - Étape SILVER vers GOLD\n",
+					"# Configuration des chemins et lecture Delta Lake\n",
+					"\n",
+					"storage_account = \"st5clouweather\"\n",
+					"container = \"synapse\"\n",
+					"\n",
+					"base_path = (\n",
+					"    f\"abfss://{container}@{storage_account}\"\n",
+					"    \".dfs.core.windows.net/\"\n",
+					")\n",
+					"\n",
+					"silver_delta_path = base_path + \"silver/weather_measurements/\"\n",
+					"gold_path = base_path + \"gold/\"\n",
+					"\n",
+					"# Charger les données SILVER\n",
+					"df_silver = (\n",
+					"    spark.read\n",
+					"    .format(\"delta\")\n",
+					"    .load(silver_delta_path)\n",
+					")\n",
+					"\n",
+					"print(\"Nombre de mesures SILVER :\", df_silver.count())\n",
+					"\n",
+					"print(\"\\nSchéma des données :\")\n",
+					"df_silver.printSchema()\n",
+					"\n",
+					"display(df_silver.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 2 - Agrégations journalières GOLD\n",
+					"\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Extraire la date à partir de l'horodatage\n",
+					"df_daily = df_silver.withColumn(\n",
+					"    \"date\",\n",
+					"    F.to_date(\"measurement_time\")\n",
+					")\n",
+					"\n",
+					"# Calculer les indicateurs quotidiens\n",
+					"df_gold = (\n",
+					"    df_daily\n",
+					"    .groupBy(\"date\")\n",
+					"    .agg(\n",
+					"        F.round(F.avg(\"temperature_c\"), 2).alias(\"avg_temperature_c\"),\n",
+					"        F.min(\"temperature_c\").alias(\"min_temperature_c\"),\n",
+					"        F.max(\"temperature_c\").alias(\"max_temperature_c\"),\n",
+					"        F.round(F.avg(\"humidity_pct\"), 2).alias(\"avg_humidity_pct\"),\n",
+					"        F.round(F.avg(\"wind_speed_kmh\"), 2).alias(\"avg_wind_speed_kmh\"),\n",
+					"        F.max(\"wind_speed_kmh\").alias(\"max_wind_speed_kmh\"),\n",
+					"        F.count(\"*\").alias(\"measurement_count\")\n",
+					"    )\n",
+					"    .orderBy(\"date\")\n",
+					")\n",
+					"\n",
+					"print(\"Nombre de jours analysés :\", df_gold.count())\n",
+					"\n",
+					"print(\"\\nSchéma GOLD :\")\n",
+					"df_gold.printSchema()\n",
+					"\n",
+					"display(df_gold)\n",
+					""
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 3 - Enregistrement GOLD dans Delta Lake\n",
+					"\n",
+					"gold_delta_path = gold_path + \"weather_daily/\"\n",
+					"\n",
+					"# Enregistrer les agrégations journalières\n",
+					"(\n",
+					"    df_gold.write\n",
+					"    .format(\"delta\")\n",
+					"    .mode(\"overwrite\")\n",
+					"    .option(\"overwriteSchema\", \"true\")\n",
+					"    .save(gold_delta_path)\n",
+					")\n",
+					"\n",
+					"print(\"Table GOLD enregistrée avec succès !\")\n",
+					"print(\"Chemin :\", gold_delta_path)\n",
+					"\n",
+					"# Relire la table Delta pour vérifier l'écriture\n",
+					"df_gold_check = (\n",
+					"    spark.read\n",
+					"    .format(\"delta\")\n",
+					"    .load(gold_delta_path)\n",
+					")\n",
+					"\n",
+					"print(\"Nombre de jours enregistrés :\", df_gold_check.count())\n",
+					"\n",
+					"display(df_gold_check.orderBy(\"date\"))\n",
+					""
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"# Étape 4 - Contrôles qualité GOLD\n",
+					"\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Relire les données GOLD enregistrées\n",
+					"df_quality_gold = (\n",
+					"    spark.read.format(\"delta\").load(gold_delta_path)\n",
+					")\n",
+					"\n",
+					"# 1. Vérifier les dates manquantes\n",
+					"null_dates = df_quality_gold.filter(\n",
+					"    F.col(\"date\").isNull()\n",
+					").count()\n",
+					"\n",
+					"# 2. Vérifier les dates dupliquées\n",
+					"duplicate_dates = (\n",
+					"    df_quality_gold\n",
+					"    .groupBy(\"date\")\n",
+					"    .count()\n",
+					"    .filter(F.col(\"count\") > 1)\n",
+					"    .count()\n",
+					")\n",
+					"\n",
+					"# 3. Vérifier la cohérence des températures\n",
+					"invalid_temperatures = df_quality_gold.filter(\n",
+					"    F.col(\"min_temperature_c\") > F.col(\"avg_temperature_c\")\n",
+					").count() + df_quality_gold.filter(\n",
+					"    F.col(\"avg_temperature_c\") > F.col(\"max_temperature_c\")\n",
+					").count()\n",
+					"\n",
+					"# 4. Vérifier les moyennes d'humidité\n",
+					"invalid_humidity = df_quality_gold.filter(\n",
+					"    F.col(\"avg_humidity_pct\").isNull() |\n",
+					"    (F.col(\"avg_humidity_pct\") < 0) |\n",
+					"    (F.col(\"avg_humidity_pct\") > 100)\n",
+					").count()\n",
+					"\n",
+					"# 5. Vérifier le nombre de mesures\n",
+					"gold_measurements = (\n",
+					"    df_quality_gold\n",
+					"    .agg(F.sum(\"measurement_count\"))\n",
+					"    .first()[0]\n",
+					")\n",
+					"\n",
+					"silver_measurements = df_silver.count()\n",
+					"\n",
+					"print(\"Dates manquantes :\", null_dates)\n",
+					"print(\"Dates dupliquées :\", duplicate_dates)\n",
+					"print(\"Températures incohérentes :\", invalid_temperatures)\n",
+					"print(\"Humidité invalide :\", invalid_humidity)\n",
+					"print(\"Mesures GOLD :\", gold_measurements)\n",
+					"print(\"Mesures SILVER :\", silver_measurements)\n",
+					"\n",
+					"# Validation finale\n",
+					"assert null_dates == 0, \"Dates manquantes\"\n",
+					"assert duplicate_dates == 0, \"Dates dupliquées\"\n",
+					"assert invalid_temperatures == 0, \"Températures incohérentes\"\n",
+					"assert invalid_humidity == 0, \"Humidité invalide\"\n",
+					"assert gold_measurements == silver_measurements, \\\n",
+					"    \"Différence entre GOLD et SILVER\"\n",
+					"\n",
+					"print(\"Contrôles qualité GOLD : VALIDÉS\")\n",
+					""
+				],
+				"execution_count": 15
+			}
+		]
+	}
+}

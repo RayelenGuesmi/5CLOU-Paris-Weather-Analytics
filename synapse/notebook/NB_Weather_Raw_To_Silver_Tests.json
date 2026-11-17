@@ -1,0 +1,1368 @@
+{
+	"name": "NB_Weather_Raw_To_Silver_Tests",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark5clou",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "6cfbbe80-9f66-46d7-bcdc-b406558a090c"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"b3c6d560-aef0-4669-a9ce-9faefca8fa0c": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": {
+											"relative_humidity_2m": 84,
+											"wind_speed_10m": 3.3,
+											"interval": 900,
+											"temperature_2m": 14.1,
+											"time": "2026-11-11T17:45"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.06580352783203125",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 73,
+											"wind_speed_10m": 14.7,
+											"interval": 900,
+											"temperature_2m": 9.9,
+											"time": "2026-11-12T17:15"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.07152557373046875",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 73,
+											"wind_speed_10m": 14.7,
+											"interval": 900,
+											"temperature_2m": 9.9,
+											"time": "2026-11-12T17:15"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.06663799285888672",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 71,
+											"wind_speed_10m": 15.9,
+											"interval": 900,
+											"temperature_2m": 9.1,
+											"time": "2026-11-12T18:30"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.07653236389160156",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 71,
+											"wind_speed_10m": 15.4,
+											"interval": 900,
+											"temperature_2m": 8.9,
+											"time": "2026-11-12T18:45"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.14710426330566406",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 71,
+											"wind_speed_10m": 15.5,
+											"interval": 900,
+											"temperature_2m": 8.7,
+											"time": "2026-11-12T19:00"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.0909566879272461",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									},
+									{
+										"0": {
+											"relative_humidity_2m": 71,
+											"wind_speed_10m": 15.4,
+											"interval": 900,
+											"temperature_2m": 8.6,
+											"time": "2026-11-12T19:15"
+										},
+										"1": {
+											"relative_humidity_2m": "%",
+											"wind_speed_10m": "km/h",
+											"interval": "seconds",
+											"temperature_2m": "°C",
+											"time": "iso8601"
+										},
+										"2": "36.0",
+										"3": "0.171661376953125",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT",
+										"7": "GMT",
+										"8": "0"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "current",
+										"type": "StructType(StructField(interval,LongType,true),StructField(relative_humidity_2m,LongType,true),StructField(temperature_2m,DoubleType,true),StructField(time,StringType,true),StructField(wind_speed_10m,DoubleType,true))"
+									},
+									{
+										"key": "1",
+										"name": "current_units",
+										"type": "StructType(StructField(interval,StringType,true),StructField(relative_humidity_2m,StringType,true),StructField(temperature_2m,StringType,true),StructField(time,StringType,true),StructField(wind_speed_10m,StringType,true))"
+									},
+									{
+										"key": "2",
+										"name": "elevation",
+										"type": "double"
+									},
+									{
+										"key": "3",
+										"name": "generationtime_ms",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									},
+									{
+										"key": "7",
+										"name": "timezone_abbreviation",
+										"type": "string"
+									},
+									{
+										"key": "8",
+										"name": "utc_offset_seconds",
+										"type": "bigint"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"3"
+									],
+									"seriesFieldKeys": [
+										"2"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"f66848ff-19f6-4f1a-9ce3-c8a7b1f13f70": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"candidateVariableNames": [
+									"df_silver"
+								],
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"7c4cd5c2-ee3b-4086-9c7c-0ecd6b639893": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"920775ed-9144-45d7-b872-b45b91c586c3": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"9e7a886c-f9b3-4079-9ca1-32f30d91bf1b": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"e4fe2073-9df3-43f2-b26a-ac5b4d94007d": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-13 12:00:00",
+										"1": "12.5",
+										"2": "65",
+										"3": "10.0",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"0797bd0b-e174-439b-9a78-ba21dbc25bb0": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "2026-11-11 17:45:00",
+										"1": "14.1",
+										"2": "84",
+										"3": "3.3",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 17:15:00",
+										"1": "9.9",
+										"2": "73",
+										"3": "14.7",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:30:00",
+										"1": "9.1",
+										"2": "71",
+										"3": "15.9",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 18:45:00",
+										"1": "8.9",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:00:00",
+										"1": "8.7",
+										"2": "71",
+										"3": "15.5",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									},
+									{
+										"0": "2026-11-12 19:15:00",
+										"1": "8.6",
+										"2": "71",
+										"3": "15.4",
+										"4": "48.853382",
+										"5": "2.355208",
+										"6": "GMT"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "measurement_time",
+										"type": "timestamp"
+									},
+									{
+										"key": "1",
+										"name": "temperature_c",
+										"type": "double"
+									},
+									{
+										"key": "2",
+										"name": "humidity_pct",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "wind_speed_kmh",
+										"type": "double"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "6",
+										"name": "timezone",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala",
+							"wranglerEntryContext": {
+								"dataframeType": "pyspark"
+							}
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ff645598-62b5-4cf3-bb4a-c94fd01f1c83/resourceGroups/rg-5clou-weather/providers/Microsoft.Synapse/workspaces/syn-5clou-weather/bigDataPools/spark5clou",
+				"name": "spark5clou",
+				"type": "Spark",
+				"endpoint": "https://syn-5clou-weather.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark5clou",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.5",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"# Projet 5CLOU - Étape RAW vers SILVER\n",
+					"# Configuration du chemin de stockage\n",
+					"\n",
+					"storage_account = \"st5clouweather\"\n",
+					"container = \"synapse\"\n",
+					"\n",
+					"raw_path = f\"abfss://{container}@{storage_account}.dfs.core.windows.net/raw/\"\n",
+					"silver_path = f\"abfss://{container}@{storage_account}.dfs.core.windows.net/silver/\"\n",
+					"\n",
+					"print(\"Source RAW :\", raw_path)\n",
+					"print(\"Destination SILVER :\", silver_path)\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"# Étape 2 - Vérifier les fichiers du dossier RAW\n",
+					"\n",
+					"files = mssparkutils.fs.ls(raw_path)\n",
+					"\n",
+					"print(\"Fichiers disponibles dans RAW :\")\n",
+					"for file in files:\n",
+					"    print(file.name, \"-\", file.size, \"octets\")\n",
+					""
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 3 - Explorer les données JSON Open-Meteo\n",
+					"\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Lire les fichiers JSON du dossier RAW\n",
+					"df_raw = (\n",
+					"    spark.read\n",
+					"    .option(\"multiLine\", \"true\")\n",
+					"    .json(raw_path + \"*.json\")\n",
+					")\n",
+					"\n",
+					"# Afficher le nombre d'enregistrements\n",
+					"print(\"Nombre d'enregistrements :\", df_raw.count())\n",
+					"\n",
+					"# Afficher la structure des données\n",
+					"print(\"\\nStructure des données :\")\n",
+					"df_raw.printSchema()\n",
+					"\n",
+					"# Afficher les premières lignes\n",
+					"print(\"\\nAperçu des données :\")\n",
+					"display(df_raw.limit(10))\n",
+					""
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 4 - Transformation RAW vers SILVER\n",
+					"\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# 1. Extraire les champs utiles du JSON imbriqué\n",
+					"df_silver = df_raw.select(\n",
+					"    F.to_timestamp(F.col(\"current.time\"), \"yyyy-MM-dd'T'HH:mm\").alias(\"measurement_time\"),\n",
+					"    F.col(\"current.temperature_2m\").cast(\"double\").alias(\"temperature_c\"),\n",
+					"    F.col(\"current.relative_humidity_2m\").cast(\"int\").alias(\"humidity_pct\"),\n",
+					"    F.col(\"current.wind_speed_10m\").cast(\"double\").alias(\"wind_speed_kmh\"),\n",
+					"    F.col(\"latitude\"),\n",
+					"    F.col(\"longitude\"),\n",
+					"    F.col(\"timezone\")\n",
+					")\n",
+					"\n",
+					"# 2. Supprimer les mesures sans date ou température\n",
+					"df_silver = df_silver.dropna(\n",
+					"    subset=[\"measurement_time\", \"temperature_c\"]\n",
+					")\n",
+					"\n",
+					"# 3. Supprimer les mesures répétées pour le même lieu\n",
+					"df_silver = df_silver.dropDuplicates(\n",
+					"    [\"measurement_time\", \"latitude\", \"longitude\"]\n",
+					")\n",
+					"\n",
+					"# 4. Trier chronologiquement pour l'affichage\n",
+					"df_silver = df_silver.orderBy(\"measurement_time\")\n",
+					"\n",
+					"print(\"Nombre de mesures RAW :\", df_raw.count())\n",
+					"print(\"Nombre de mesures SILVER :\", df_silver.count())\n",
+					"\n",
+					"print(\"\\nSchéma SILVER :\")\n",
+					"df_silver.printSchema()\n",
+					"\n",
+					"display(df_silver)\n",
+					""
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 5 - Enregistrer les données SILVER au format Delta\n",
+					"\n",
+					"silver_delta_path = silver_path + \"weather_measurements/\"\n",
+					"\n",
+					"# Premier chargement : création de la table Delta\n",
+					"(\n",
+					"    df_silver.write\n",
+					"    .format(\"delta\")\n",
+					"    .mode(\"overwrite\")\n",
+					"    .save(silver_delta_path)\n",
+					")\n",
+					"\n",
+					"print(\"Données SILVER enregistrées avec succès !\")\n",
+					"print(\"Chemin :\", silver_delta_path)\n",
+					"\n",
+					"# Relire les données pour vérifier l'enregistrement\n",
+					"df_check = spark.read.format(\"delta\").load(silver_delta_path)\n",
+					"\n",
+					"print(\"Nombre de mesures enregistrées :\", df_check.count())\n",
+					"display(df_check.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 6 - Préparer le chargement incrémental SILVER\n",
+					"\n",
+					"from delta.tables import DeltaTable\n",
+					"\n",
+					"# Vérifier que la table Delta existe déjà\n",
+					"table_exists = DeltaTable.isDeltaTable(\n",
+					"    spark,\n",
+					"    silver_delta_path\n",
+					")\n",
+					"\n",
+					"print(\"Table Delta existante :\", table_exists)\n",
+					"\n",
+					"# Afficher son contenu actuel\n",
+					"df_existing = (\n",
+					"    spark.read\n",
+					"    .format(\"delta\")\n",
+					"    .load(silver_delta_path)\n",
+					")\n",
+					"\n",
+					"print(\"Mesures existantes :\", df_existing.count())\n",
+					"\n",
+					"display(df_existing.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 7 - Chargement incrémental avec Delta MERGE\n",
+					"\n",
+					"from delta.tables import DeltaTable\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Reprendre les données RAW déjà nettoyées\n",
+					"df_new = df_silver\n",
+					"\n",
+					"# Accéder à la table Delta existante\n",
+					"delta_table = DeltaTable.forPath(\n",
+					"    spark,\n",
+					"    silver_delta_path\n",
+					")\n",
+					"\n",
+					"# Compter les mesures avant le MERGE\n",
+					"count_before = delta_table.toDF().count()\n",
+					"\n",
+					"# Insérer uniquement les nouvelles mesures\n",
+					"(\n",
+					"    delta_table.alias(\"target\")\n",
+					"    .merge(\n",
+					"        df_new.alias(\"source\"),\n",
+					"        \"\"\"\n",
+					"        target.measurement_time = source.measurement_time\n",
+					"        AND target.latitude = source.latitude\n",
+					"        AND target.longitude = source.longitude\n",
+					"        \"\"\"\n",
+					"    )\n",
+					"    .whenNotMatchedInsertAll()\n",
+					"    .execute()\n",
+					")\n",
+					"\n",
+					"# Vérifier le nombre de mesures après le MERGE\n",
+					"df_result = spark.read.format(\"delta\").load(silver_delta_path)\n",
+					"\n",
+					"count_after = df_result.count()\n",
+					"\n",
+					"print(\"Mesures avant MERGE :\", count_before)\n",
+					"print(\"Mesures après MERGE :\", count_after)\n",
+					"print(\"Nouvelles mesures :\", count_after - count_before)\n",
+					"\n",
+					"display(df_result.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 8 - Tester une nouvelle insertion avec MERGE\n",
+					"\n",
+					"from datetime import datetime\n",
+					"from pyspark.sql import Row\n",
+					"from delta.tables import DeltaTable\n",
+					"\n",
+					"# Nouvelle mesure fictive uniquement pour le test\n",
+					"test_data = [\n",
+					"    Row(\n",
+					"        measurement_time=datetime(2026, 11, 13, 12, 0),\n",
+					"        temperature_c=12.5,\n",
+					"        humidity_pct=65,\n",
+					"        wind_speed_kmh=10.0,\n",
+					"        latitude=48.853382,\n",
+					"        longitude=2.355208,\n",
+					"        timezone=\"GMT\"\n",
+					"    )\n",
+					"]\n",
+					"\n",
+					"df_test = spark.createDataFrame(\n",
+					"    test_data,\n",
+					"    schema=df_silver.schema\n",
+					")\n",
+					"\n",
+					"delta_table = DeltaTable.forPath(spark, silver_delta_path)\n",
+					"\n",
+					"# Insérer la mesure si elle n'existe pas\n",
+					"(\n",
+					"    delta_table.alias(\"target\")\n",
+					"    .merge(\n",
+					"        df_test.alias(\"source\"),\n",
+					"        \"\"\"\n",
+					"        target.measurement_time = source.measurement_time\n",
+					"        AND target.latitude = source.latitude\n",
+					"        AND target.longitude = source.longitude\n",
+					"        \"\"\"\n",
+					"    )\n",
+					"    .whenNotMatchedInsertAll()\n",
+					"    .execute()\n",
+					")\n",
+					"\n",
+					"df_result = spark.read.format(\"delta\").load(silver_delta_path)\n",
+					"\n",
+					"print(\"Nombre de mesures après insertion :\", df_result.count())\n",
+					"display(df_result.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"\n",
+					"# Étape 9 - Supprimer uniquement la mesure fictive\n",
+					"\n",
+					"from delta.tables import DeltaTable\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"delta_table = DeltaTable.forPath(spark, silver_delta_path)\n",
+					"\n",
+					"# Identifier précisément la mesure de test\n",
+					"test_condition = (\n",
+					"    (F.col(\"measurement_time\") == F.lit(\"2026-11-13 12:00:00\").cast(\"timestamp\")) &\n",
+					"    (F.col(\"latitude\") == 48.853382) &\n",
+					"    (F.col(\"longitude\") == 2.355208) &\n",
+					"    (F.col(\"temperature_c\") == 12.5) &\n",
+					"    (F.col(\"humidity_pct\") == 65) &\n",
+					"    (F.col(\"wind_speed_kmh\") == 10.0)\n",
+					")\n",
+					"\n",
+					"# Vérifier qu'une seule mesure correspond\n",
+					"test_count = delta_table.toDF().filter(test_condition).count()\n",
+					"\n",
+					"print(\"Mesures fictives identifiées :\", test_count)\n",
+					"\n",
+					"if test_count == 1:\n",
+					"    delta_table.delete(test_condition)\n",
+					"    print(\"Mesure fictive supprimée.\")\n",
+					"else:\n",
+					"    print(\"Suppression annulée : nombre inattendu de mesures.\")\n",
+					"\n",
+					"# Contrôler le résultat\n",
+					"df_clean = spark.read.format(\"delta\").load(silver_delta_path)\n",
+					"\n",
+					"print(\"Mesures restantes :\", df_clean.count())\n",
+					"display(df_clean.orderBy(\"measurement_time\"))\n",
+					""
+				],
+				"execution_count": 9
+			}
+		]
+	}
+}
