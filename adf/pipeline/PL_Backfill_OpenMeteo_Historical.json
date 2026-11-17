@@ -42,13 +42,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_ADLS_Raw_Binary",
+						"referenceName": "DS_ADLS_Historical_Raw_Binary",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": {
-								"value": "@concat('weather_paris_',formatDateTime(utcNow(),'yyyyMMdd_HHmmss'),'_',pipeline().RunId,'.json')",
-								"type": "Expression"
-							}
+							"fileName": "weather_historical_20251101_20261110.json"
 						}
 					}
 				]
