@@ -1,0 +1,61 @@
+{
+	"name": "PL_Backfill_OpenMeteo_Historical",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_OpenMeteo_To_Raw",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.00:10:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_OpenMeteo_Historical_HTTP_Binary",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_ADLS_Raw_Binary",
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": {
+								"value": "@concat('weather_paris_',formatDateTime(utcNow(),'yyyyMMdd_HHmmss'),'_',pipeline().RunId,'.json')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-11-12T17:24:49Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

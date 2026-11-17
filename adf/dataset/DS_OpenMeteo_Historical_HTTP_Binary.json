@@ -1,0 +1,18 @@
+{
+	"name": "DS_OpenMeteo_Historical_HTTP_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_OpenMeteo_Historical_HTTP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "v1/archive?latitude=48.8566&longitude=2.3522&start_date=2025-11-01&end_date=2026-11-10&daily=temperature_2m_mean,temperature_2m_min,temperature_2m_max,relative_humidity_2m_mean,wind_speed_10m_mean,wind_speed_10m_max&timezone=Europe%2FParis"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
