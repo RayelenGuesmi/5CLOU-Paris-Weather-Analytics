@@ -1,0 +1,12 @@
+{
+	"name": "LS_ADLS_Weather",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Connexion au Data Lake du projet 5CLOU",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://st5clouweather.dfs.core.windows.net/"
+		}
+	}
+}

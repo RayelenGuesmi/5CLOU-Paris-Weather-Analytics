@@ -1,0 +1,18 @@
+{
+	"name": "DS_OpenMeteo_HTTP_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_OpenMeteo_HTTP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "v1/forecast?latitude=48.8566&longitude=2.3522&current=temperature_2m,relative_humidity_2m,wind_speed_10m"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

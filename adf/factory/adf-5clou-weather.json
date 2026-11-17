@@ -1,0 +1,15 @@
+{
+	"name": "adf-5clou-weather",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "germanywestcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0fc7db8b-88c3-4663-966a-4891a360366e",
+		"tenantId": "1dc8f08a-46f6-4cdb-b8ff-03e46c14979d"
+	}
+}

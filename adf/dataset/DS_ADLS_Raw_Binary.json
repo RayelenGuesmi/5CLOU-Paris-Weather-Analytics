@@ -1,0 +1,28 @@
+{
+	"name": "DS_ADLS_Raw_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_Weather",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				},
+				"folderPath": "raw",
+				"fileSystem": "synapse"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

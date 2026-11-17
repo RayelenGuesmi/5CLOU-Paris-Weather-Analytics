@@ -1,0 +1,26 @@
+{
+	"name": "TR_OpenMeteo_15min",
+	"properties": {
+		"description": "Ingestion automatique des données météo toutes les 15 minutes",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_Ingest_OpenMeteo",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2026-11-12T18:45:00",
+				"endTime": "2026-11-12T20:30:00",
+				"timeZone": "W. Central Africa Standard Time"
+			}
+		}
+	}
+}
