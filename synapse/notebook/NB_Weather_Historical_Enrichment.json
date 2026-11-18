@@ -1,0 +1,203 @@
+{
+	"name": "NB_Weather_Historical_Enrichment",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark5clou",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "38b86bf1-3038-40ec-85c9-b9721b50a71b"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ff645598-62b5-4cf3-bb4a-c94fd01f1c83/resourceGroups/rg-5clou-weather/providers/Microsoft.Synapse/workspaces/syn-5clou-weather/bigDataPools/spark5clou",
+				"name": "spark5clou",
+				"type": "Spark",
+				"endpoint": "https://syn-5clou-weather.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark5clou",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.5",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# NB_Weather_Historical_Enrichment\n",
+					"**Projet 5CLOU – Enrichissement historique (Open-Meteo Archive)**\n",
+					"\n",
+					"1. RAW historique (JSON journalier) → SILVER historique (Delta)\n",
+					"2. SILVER historique + GOLD courant (`gold/weather_daily`) → GOLD enrichi (`gold/weather_daily_enriched`)\n",
+					"3. Contrôles qualité (`assert`)\n",
+					"\n",
+					"Règle de fusion : les dates couvertes par l'archive viennent de l'archive ; les dates postérieures viennent de la collecte courante (ADF toutes les 15 min). Le notebook est idempotent : il peut être relancé à chaque exécution du pipeline."
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Étape 1 - Configuration des chemins\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"storage_account = \"st5clouweather\"\n",
+					"container = \"synapse\"\n",
+					"base_path = f\"abfss://{container}@{storage_account}.dfs.core.windows.net/\"\n",
+					"\n",
+					"raw_hist_path   = base_path + \"raw/historical_openmeteo/*.json\"\n",
+					"silver_hist_path = base_path + \"silver/historical_openmeteo/daily_20251101_20261110/\"\n",
+					"gold_current_path = base_path + \"gold/weather_daily/\"\n",
+					"gold_enriched_path = base_path + \"gold/weather_daily_enriched/\"\n",
+					"\n",
+					"print(\"RAW historique :\", raw_hist_path)\n",
+					"print(\"GOLD enrichi   :\", gold_enriched_path)"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Étape 2 - RAW historique -> SILVER historique\n",
+					"# Le JSON Open-Meteo Archive contient des tableaux parallèles dans l'objet \"daily\".\n",
+					"df_raw_hist = spark.read.option(\"multiLine\", \"true\").json(raw_hist_path)\n",
+					"\n",
+					"df_silver_hist = (\n",
+					"    df_raw_hist\n",
+					"    .select(F.posexplode(\"daily.time\").alias(\"pos\", \"day\"), \"daily\")\n",
+					"    .select(\n",
+					"        F.to_date(\"day\").alias(\"date\"),\n",
+					"        F.expr(\"daily.temperature_2m_mean[pos]\").cast(\"double\").alias(\"avg_temperature_c\"),\n",
+					"        F.expr(\"daily.temperature_2m_min[pos]\").cast(\"double\").alias(\"min_temperature_c\"),\n",
+					"        F.expr(\"daily.temperature_2m_max[pos]\").cast(\"double\").alias(\"max_temperature_c\"),\n",
+					"        F.expr(\"daily.relative_humidity_2m_mean[pos]\").cast(\"double\").alias(\"avg_humidity_pct\"),\n",
+					"        F.expr(\"daily.wind_speed_10m_mean[pos]\").cast(\"double\").alias(\"avg_wind_speed_kmh\"),\n",
+					"        F.expr(\"daily.wind_speed_10m_max[pos]\").cast(\"double\").alias(\"max_wind_speed_kmh\"),\n",
+					"    )\n",
+					"    .dropna(subset=[\"date\", \"avg_temperature_c\"])\n",
+					"    .dropDuplicates([\"date\"])\n",
+					"    .orderBy(\"date\")\n",
+					")\n",
+					"\n",
+					"(df_silver_hist.write.format(\"delta\")\n",
+					"    .mode(\"overwrite\").option(\"overwriteSchema\", \"true\")\n",
+					"    .save(silver_hist_path))\n",
+					"\n",
+					"df_silver_hist = spark.read.format(\"delta\").load(silver_hist_path)\n",
+					"print(\"Journées SILVER historiques :\", df_silver_hist.count())\n",
+					"df_silver_hist.agg(F.min(\"date\").alias(\"debut\"), F.max(\"date\").alias(\"fin\")).show()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Étape 3 - Fusion SILVER historique + GOLD courant -> GOLD enrichi\n",
+					"df_gold_current = spark.read.format(\"delta\").load(gold_current_path)\n",
+					"\n",
+					"last_hist_date = df_silver_hist.agg(F.max(\"date\")).first()[0]\n",
+					"print(\"Dernière date de l'archive :\", last_hist_date)\n",
+					"\n",
+					"gold_columns = [\"date\", \"avg_temperature_c\", \"min_temperature_c\", \"max_temperature_c\",\n",
+					"                \"avg_humidity_pct\", \"avg_wind_speed_kmh\", \"max_wind_speed_kmh\",\n",
+					"                \"measurement_count\", \"data_source\"]\n",
+					"\n",
+					"df_hist_part = (\n",
+					"    df_silver_hist\n",
+					"    .withColumn(\"avg_temperature_c\", F.round(\"avg_temperature_c\", 2))\n",
+					"    .withColumn(\"avg_humidity_pct\", F.round(\"avg_humidity_pct\", 2))\n",
+					"    .withColumn(\"avg_wind_speed_kmh\", F.round(\"avg_wind_speed_kmh\", 2))\n",
+					"    .withColumn(\"measurement_count\", F.lit(None).cast(\"long\"))   # inconnu pour l'archive\n",
+					"    .withColumn(\"data_source\", F.lit(\"open-meteo-archive\"))\n",
+					"    .select(gold_columns)\n",
+					")\n",
+					"\n",
+					"df_current_part = (\n",
+					"    df_gold_current\n",
+					"    .filter(F.col(\"date\") > F.lit(last_hist_date))\n",
+					"    .withColumn(\"avg_temperature_c\", F.col(\"avg_temperature_c\").cast(\"double\"))\n",
+					"    .withColumn(\"min_temperature_c\", F.col(\"min_temperature_c\").cast(\"double\"))\n",
+					"    .withColumn(\"max_temperature_c\", F.col(\"max_temperature_c\").cast(\"double\"))\n",
+					"    .withColumn(\"avg_humidity_pct\", F.col(\"avg_humidity_pct\").cast(\"double\"))\n",
+					"    .withColumn(\"avg_wind_speed_kmh\", F.col(\"avg_wind_speed_kmh\").cast(\"double\"))\n",
+					"    .withColumn(\"max_wind_speed_kmh\", F.col(\"max_wind_speed_kmh\").cast(\"double\"))\n",
+					"    .withColumn(\"measurement_count\", F.col(\"measurement_count\").cast(\"long\"))\n",
+					"    .withColumn(\"data_source\", F.lit(\"open-meteo-current-adf\"))\n",
+					"    .select(gold_columns)\n",
+					")\n",
+					"\n",
+					"df_enriched = df_hist_part.unionByName(df_current_part).orderBy(\"date\")\n",
+					"\n",
+					"(df_enriched.write.format(\"delta\")\n",
+					"    .mode(\"overwrite\").option(\"overwriteSchema\", \"true\")\n",
+					"    .save(gold_enriched_path))\n",
+					"\n",
+					"print(\"Écriture GOLD enrichi terminée\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"# Étape 4 - Contrôles qualité GOLD enrichi\n",
+					"df_check = spark.read.format(\"delta\").load(gold_enriched_path)\n",
+					"\n",
+					"total_days      = df_check.count()\n",
+					"null_dates      = df_check.filter(F.col(\"date\").isNull()).count()\n",
+					"duplicate_dates = df_check.groupBy(\"date\").count().filter(\"count > 1\").count()\n",
+					"invalid_temps   = df_check.filter(\n",
+					"    (F.col(\"min_temperature_c\") > F.col(\"avg_temperature_c\")) |\n",
+					"    (F.col(\"avg_temperature_c\") > F.col(\"max_temperature_c\"))).count()\n",
+					"invalid_humidity = df_check.filter(\n",
+					"    (F.col(\"avg_humidity_pct\") < 0) | (F.col(\"avg_humidity_pct\") > 100)).count()\n",
+					"\n",
+					"print(\"Journées totales   :\", total_days)\n",
+					"print(\"Dates nulles       :\", null_dates)\n",
+					"print(\"Dates dupliquées   :\", duplicate_dates)\n",
+					"print(\"Températures incoh.:\", invalid_temps)\n",
+					"print(\"Humidité invalide  :\", invalid_humidity)\n",
+					"df_check.groupBy(\"data_source\").agg(\n",
+					"    F.count(\"*\").alias(\"jours\"), F.min(\"date\").alias(\"debut\"), F.max(\"date\").alias(\"fin\")).show()\n",
+					"\n",
+					"assert total_days >= 377, \"Moins de journées que l'enrichissement initial\"\n",
+					"assert null_dates == 0, \"Dates nulles\"\n",
+					"assert duplicate_dates == 0, \"Dates dupliquées\"\n",
+					"assert invalid_temps == 0, \"Températures incohérentes\"\n",
+					"assert invalid_humidity == 0, \"Humidité hors plage\"\n",
+					"print(\"Contrôles qualité GOLD enrichi : VALIDÉS\")\n",
+					"display(df_check.orderBy(F.col(\"date\").desc()).limit(10))"
+				],
+				"execution_count": 8
+			}
+		]
+	}
+}
