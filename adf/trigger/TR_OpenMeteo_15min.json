@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "Ingestion automatique des données météo toutes les 15 minutes",
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
