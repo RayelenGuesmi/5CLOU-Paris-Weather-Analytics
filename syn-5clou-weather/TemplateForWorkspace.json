@@ -207,7 +207,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -267,7 +267,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- 11a : définition exacte des vues\nSELECT v.name, m.definition\nFROM sys.sql_modules m JOIN sys.views v ON m.object_id = v.object_id;\n\n-- 11b : contrôle de la vue enrichie\nSELECT COUNT(*) AS total_jours, MIN(date) AS debut, MAX(date) AS fin,\n       SUM(CASE WHEN measurement_count IS NULL THEN 1 ELSE 0 END) AS jours_sans_compteur\nFROM dbo.vw_weather_daily_enriched;\n\n-- 11c : les 5 dernières lignes\nSELECT TOP 5 * FROM dbo.vw_weather_daily_enriched ORDER BY date DESC;",
+					"query": "SELECT TOP 5 * FROM dbo.vw_weather_daily_enriched ORDER BY date DESC;",
 					"metadata": {
 						"language": "sql"
 					},
