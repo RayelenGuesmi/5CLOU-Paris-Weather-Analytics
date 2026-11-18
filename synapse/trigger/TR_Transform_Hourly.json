@@ -9,7 +9,7 @@
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 60,
-				"startTime": "2026-11-18T18:05:00",
+				"startTime": "2026-11-18T18:00:00",
 				"endTime": "2026-11-19T12:00:00",
 				"timeZone": "Romance Standard Time"
 			}
