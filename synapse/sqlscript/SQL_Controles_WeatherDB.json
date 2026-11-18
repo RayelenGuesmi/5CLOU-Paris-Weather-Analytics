@@ -2,7 +2,7 @@
 	"name": "SQL_Controles_WeatherDB",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP 5 * FROM dbo.vw_weather_daily_enriched ORDER BY date DESC;",
+			"query": "-- 5CLOU - Contrôles de la base WeatherDB (lecture seule)\n\n-- 1. Définition des vues\nSELECT v.name, m.definition\nFROM sys.sql_modules m JOIN sys.views v ON m.object_id = v.object_id;\n\n-- 2. Couverture de la vue enrichie\nSELECT COUNT(*) AS total_jours, MIN(date) AS debut, MAX(date) AS fin,\n       SUM(CASE WHEN measurement_count IS NULL THEN 1 ELSE 0 END) AS jours_archive\nFROM dbo.vw_weather_daily_enriched;\n\n-- 3. Absence de doublons de date\nSELECT date, COUNT(*) AS nb\nFROM dbo.vw_weather_daily_enriched\nGROUP BY date HAVING COUNT(*) > 1;\n\n-- 4. Répartition par source\nSELECT data_source, COUNT(*) AS jours, MIN(date) AS debut, MAX(date) AS fin\nFROM dbo.vw_weather_daily_enriched\nGROUP BY data_source;\n\n-- 5. Dernières journées\nSELECT TOP 5 * FROM dbo.vw_weather_daily_enriched ORDER BY date DESC;",
 			"metadata": {
 				"language": "sql"
 			},
