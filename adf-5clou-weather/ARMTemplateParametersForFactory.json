@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-5clou-weather"
+		},
+		"LS_ADLS_Weather_properties_typeProperties_url": {
+			"value": "https://st5clouweather.dfs.core.windows.net/"
+		},
+		"LS_OpenMeteo_HTTP_properties_typeProperties_url": {
+			"value": "https://api.open-meteo.com/"
+		},
+		"LS_OpenMeteo_Historical_HTTP_properties_typeProperties_url": {
+			"value": "https://archive-api.open-meteo.com/"
+		}
+	}
+}
