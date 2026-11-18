@@ -1,166 +1,108 @@
 # 5CLOU — Paris Weather Analytics
 
-**Pipeline de données météorologiques sur Microsoft Azure, de l'ingestion Open-Meteo à la visualisation Power BI.**
+**Plateforme de données météo temps réel sur Microsoft Azure : de l'API Open-Meteo au tableau de bord Power BI, entièrement automatisée.**
 
-Projet académique de Data Engineering / Cloud réalisé à **SUPINFO Paris**. L'objectif est de mettre en œuvre une architecture *Medallion* (RAW → SILVER → GOLD), de contrôler la qualité des données et de rendre des indicateurs météorologiques quotidiens accessibles à des outils de Business Intelligence.
+Projet académique de Data Engineering réalisé à **SUPINFO Paris** (MSc Ingénierie Data, 2026–2027) par **Rayelen Guesmi** et **Tharshan Sivapalan**.
 
-> **Statut :** pipeline d'ingestion et transformations Azure réalisés ; exposition SQL opérationnelle ; visualisations Power BI en cours de finalisation. Le jeu de données présenté ci-dessous correspond à une exécution de démonstration, et non à un suivi météorologique continu en temps réel.
+La plateforme collecte les conditions météo de Paris toutes les 15 minutes, les transforme selon une architecture **Medallion** (RAW → SILVER → GOLD) avec Delta Lake, les fusionne avec un an d'historique et les expose dans un tableau de bord Power BI.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A[Open-Meteo API<br/>Conditions actuelles à Paris] -->|HTTP GET| B[Azure Data Factory<br/>PL_Ingest_OpenMeteo]
-    B -->|JSON bruts| C[(ADLS Gen2<br/>RAW)]
-    C -->|Notebook PySpark| D[(ADLS Gen2<br/>SILVER / Delta Lake)]
-    D -->|Agrégations PySpark| E[(ADLS Gen2<br/>GOLD / Delta Lake)]
-    E -->|OPENROWSET FORMAT = DELTA| F[Synapse Serverless SQL<br/>WeatherDB.dbo.vw_weather_daily]
-    F -->|Import SQL| G[Power BI]
-    H[Pipeline Synapse<br/>RAW → SILVER → GOLD] -. orchestre les notebooks .-> D
-    H -. orchestre les notebooks .-> E
+    A[Open-Meteo API<br/>conditions actuelles] -->|HTTP GET toutes les 15 min| B[Azure Data Factory<br/>PL_Ingest_OpenMeteo]
+    A2[Open-Meteo Archive API<br/>historique journalier] -->|import ponctuel| B2[Azure Data Factory<br/>PL_Backfill_OpenMeteo_Historical]
+    B --> C[(ADLS Gen2<br/>RAW JSON)]
+    B2 --> C
+    C --> P
+    subgraph P[Pipeline Synapse PL_Transform_Weather_Silver_Gold — toutes les heures]
+      D[NB_Weather_Raw_To_Silver<br/>qualité + Delta MERGE] --> E[NB_Weather_Silver_To_Gold<br/>agrégats quotidiens]
+      E --> F[NB_Weather_Historical_Enrichment<br/>fusion historique + courant]
+    end
+    F --> G[(GOLD Delta<br/>weather_daily_enriched)]
+    G -->|OPENROWSET FORMAT=DELTA| H[Synapse SQL Serverless<br/>WeatherDB.dbo.vw_weather_daily_enriched]
+    H --> I[Power BI<br/>3 pages]
 ```
 
-**À noter :** le déclencheur d'ingestion ADF et le pipeline de transformation Synapse sont deux orchestrations distinctes. Aucun déclenchement automatique d'ADF vers Synapse n'est démontré dans les définitions du projet.
+| Étape | Service | Planification |
+|---|---|---|
+| Ingestion | Azure Data Factory — `TR_OpenMeteo_15min` | toutes les 15 min |
+| Transformation | Synapse Spark (PySpark, Delta Lake) — `TR_Transform_Hourly` | toutes les heures |
+| Exposition | Synapse SQL Serverless — vue `vw_weather_daily_enriched` | lecture directe du GOLD |
+| Visualisation | Power BI Desktop (Import) | à l'actualisation |
 
 ## Technologies
 
-| Technologie | Utilisation |
-| --- | --- |
-| **Open-Meteo** | API publique de données météorologiques |
-| **Azure Data Factory (ADF)** | Collecte HTTP et copie des réponses JSON vers RAW |
-| **Azure Data Lake Storage Gen2** | Stockage des couches RAW, SILVER et GOLD |
-| **Azure Synapse Analytics / Apache Spark** | Nettoyage, validation, déduplication, agrégations PySpark |
-| **Delta Lake** | Tables SILVER et GOLD ; `MERGE` incrémental sur SILVER |
-| **Synapse Serverless SQL** | Exposition des agrégations GOLD au moyen d'une vue SQL |
-| **Power BI** | Modélisation et visualisations météorologiques (en cours) |
-| **GitHub** | Versionnement natif des ressources ADF et Synapse |
+| Technologie | Rôle |
+|---|---|
+| **Open-Meteo** | API publique : conditions actuelles (`/v1/forecast`) et historique (`/v1/archive`) |
+| **Azure Data Factory** | Copie HTTP → Data Lake, déclencheur planifié, retries |
+| **ADLS Gen2** | Stockage des couches RAW, SILVER, GOLD |
+| **Azure Synapse / Apache Spark 3.5** | Notebooks PySpark, orchestration, contrôles qualité |
+| **Delta Lake** | Tables SILVER/GOLD, `MERGE` incrémental |
+| **Synapse SQL Serverless** | Vue SQL sur le GOLD pour la BI |
+| **Power BI** | Tableau de bord interactif |
+| **GitHub** | Versionnement natif ADF et Synapse |
 
-## Source et ingestion des données
+Région Azure : **Germany West Central**. Authentification ADF → Data Lake par **identité managée** (aucune clé stockée).
 
-Le pipeline `PL_Ingest_OpenMeteo` exécute l'activité `Copy_OpenMeteo_To_Raw` : une requête HTTP `GET` récupère une réponse JSON de l'API Open-Meteo, puis ADF la copie **sans transformation** dans le Data Lake.
+## Ingestion (Azure Data Factory)
 
-- **Ville :** Paris (`latitude=48.8566`, `longitude=2.3522`).
-- **Endpoint :** `https://api.open-meteo.com/v1/forecast`
-- **Champs demandés :** `temperature_2m`, `relative_humidity_2m`, `wind_speed_10m` dans `current`.
-- **Authentification HTTP :** anonyme, avec validation du certificat serveur activée.
-- **Destination :** `abfss://synapse@st5clouweather.dfs.core.windows.net/raw/`
-- **Nommage :** `weather_paris_<horodatage_UTC>_<pipeline_RunId>.json`.
-- **Résilience ADF :** délai maximal de 10 minutes par activité, 3 nouvelles tentatives, espacées de 30 secondes.
+- **Pipeline** `PL_Ingest_OpenMeteo` — activité `Copy_OpenMeteo_To_Raw` : `GET https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current=temperature_2m,relative_humidity_2m,wind_speed_10m`
+- **Destination** : `raw/weather_paris_<UTC>_<RunId>.json` (nom unique par exécution, aucun écrasement)
+- **Résilience** : timeout 10 min, 3 retries espacés de 30 s
+- **Déclencheur** `TR_OpenMeteo_15min` : toutes les 15 min, fuseau Paris
+- **Backfill** `PL_Backfill_OpenMeteo_Historical` : 375 journées (01/11/2025 → 10/11/2026) depuis l'API Archive vers `raw/historical_openmeteo/`
 
-Le déclencheur `TR_OpenMeteo_15min` est configuré pour une fréquence de **15 minutes**. La fenêtre enregistrée dans Git s'étend du **12 novembre 2026 à 18 h 45 au 12 novembre 2026 à 20 h 30**, fuseau **W. Central Africa Standard Time (UTC+1)**. Cette fenêtre est terminée ; la présence de `runtimeState: Started` dans le JSON ne prouve pas que des ingestions continuent aujourd'hui.
+## Transformations (Synapse Spark)
 
-> Les fichiers RAW conservent les réponses de l'API. Plusieurs appels peuvent renvoyer la même observation météo : une déduplication est effectuée en SILVER.
+Pipeline `PL_Transform_Weather_Silver_Gold`, 3 activités chaînées sur succès (retry 1, timeout 1 h), déclenché toutes les heures par `TR_Transform_Hourly` :
 
-## Traitements PySpark : architecture Medallion
+1. **`NB_Weather_Raw_To_Silver`** — extraction du JSON imbriqué, typage, déduplication sur (`measurement_time`, `latitude`, `longitude`), contrôles (nulls, doublons, plages de valeurs) avec `assert`, puis **Delta `MERGE`** (insertion des nouvelles mesures uniquement) → `silver/weather_measurements/`
+2. **`NB_Weather_Silver_To_Gold`** — agrégats quotidiens (températures moy/min/max, humidité, vent moyen/max, nombre de mesures) et contrôles (`Tmin ≤ Tmoy ≤ Tmax`, cohérence SILVER/GOLD) → `gold/weather_daily/`
+3. **`NB_Weather_Historical_Enrichment`** — historique RAW → SILVER, fusion avec le GOLD courant (l'archive couvre jusqu'au 10/11/2026, la collecte ADF ensuite), colonne `data_source` pour la provenance, contrôles qualité → `gold/weather_daily_enriched/`
 
-### RAW → SILVER
-
-Le notebook [`NB_Weather_Raw_To_Silver`](synapse/notebook/NB_Weather_Raw_To_Silver.json), exécuté sur le pool `spark5clou`, réalise les opérations suivantes :
-
-1. Lit les JSON du répertoire `raw/` via Spark (`multiLine=true`).
-2. Extrait l'heure de mesure, les variables météo, les coordonnées et le fuseau horaire ; convertit les types.
-3. Écarte les lignes sans horodatage ou température.
-4. Déduplique sur **(`measurement_time`, `latitude`, `longitude`)**.
-5. Contrôle les valeurs manquantes, les doublons et les plages de valeurs (humidité 0–100 %, température −50 à 60 °C, vent ≥ 0, coordonnées valides).
-6. Crée la table Delta SILVER si elle n'existe pas, sinon effectue un **`MERGE` avec insertion des nouvelles clés uniquement**.
-7. Relit la table et vérifie à nouveau les contraintes de qualité.
-
-**Sortie :** `abfss://synapse@st5clouweather.dfs.core.windows.net/silver/weather_measurements/`.
-
-Ce traitement est **incrémental à l'écriture**, mais relit les fichiers RAW disponibles lors de chaque exécution.
-
-### SILVER → GOLD
-
-Le notebook [`NB_Weather_Silver_To_Gold`](synapse/notebook/NB_Weather_Silver_To_Gold.json) regroupe les observations **par date** et calcule :
-
-| Colonne GOLD | Signification |
-| --- | --- |
-| `date` | Jour de la mesure |
-| `avg_temperature_c` | Température moyenne quotidienne (°C) |
-| `min_temperature_c` / `max_temperature_c` | Températures extrêmes du jour (°C) |
-| `avg_humidity_pct` | Humidité relative moyenne (%) |
-| `avg_wind_speed_kmh` / `max_wind_speed_kmh` | Vent moyen et maximal (km/h) |
-| `measurement_count` | Nombre d'observations agrégées |
-
-**Sortie :** `abfss://synapse@st5clouweather.dfs.core.windows.net/gold/weather_daily/`.
-
-La couche GOLD est **recalculée intégralement**, puis réécrite en Delta (`overwrite` et `overwriteSchema`). Les contrôles vérifient notamment l'unicité des dates, la cohérence des températures, la plage d'humidité et l'égalité entre le total d'observations GOLD et SILVER.
-
-### Orchestration Synapse
-
-Le pipeline [`PL_Transform_Weather_Silver_Gold`](synapse/pipeline/PL_Transform_Weather_Silver_Gold.json) exécute séquentiellement :
-
-1. `Execute_Raw_To_Silver` → notebook `NB_Weather_Raw_To_Silver` ;
-2. `Execute_Silver_To_Gold` → notebook `NB_Weather_Silver_To_Gold` **uniquement si le premier réussit**.
-
-Les deux activités utilisent `spark5clou`, deux exécuteurs de taille *Small* et une authentification `MSI`. La politique d'exécution indique **12 heures de timeout par activité** et **aucun retry automatique**.
-
-## Tests et qualité des données
-
-Les notebooks principaux intègrent des contrôles `assert` : le traitement échoue si les données ne respectent pas les contraintes définies.
-
-Le notebook [`NB_Weather_Raw_To_Silver_Tests`](synapse/notebook/NB_Weather_Raw_To_Silver_Tests.json) sert à **expérimenter les chargements Delta et le `MERGE`**, dont l'insertion puis la suppression d'une observation fictive. **Attention : il contient un `mode("overwrite")` sur SILVER ; ne pas le relancer tel quel sur les données de production.** Il s'agit d'un notebook de tests d'intégration manuels, pas d'une suite complète de tests unitaires automatisés.
+`NB_Weather_Raw_To_Silver_Tests` : tests d'intégration manuels du `MERGE` (insertion puis suppression d'une mesure fictive), isolés dans `tests/silver_weather_measurements/`.
 
 ## Exposition SQL et Power BI
 
-La base **`WeatherDB`**, sur le moteur **Synapse Serverless SQL** (`syn-5clou-weather-ondemand.sql.azuresynapse.net`), contient la vue **`dbo.vw_weather_daily`**. Celle-ci lit directement la table GOLD au format Delta avec `OPENROWSET`.
+```sql
+SELECT * FROM WeatherDB.dbo.vw_weather_daily_enriched ORDER BY date DESC;
+```
 
-Le script de définition est disponible dans [`sql/create_weather_view.sql`](sql/create_weather_view.sql).
+Le rapport [`powerbi/Paris_Weather_Analytics.pbix`](powerbi/) se connecte à `syn-5clou-weather-ondemand.sql.azuresynapse.net` / `WeatherDB` :
 
-Power BI Desktop se connecte à `WeatherDB` avec le connecteur SQL Server, en mode **Import**. Les indicateurs globaux calculés à partir de moyennes quotidiennes doivent être **pondérés par `measurement_count`** pour ne pas attribuer le même poids à une journée avec une seule mesure et à une journée avec plusieurs mesures.
+- **Page 1 — Températures** : évolution mensuelle, courbes min/moy/max, indicateurs
+- **Page 2 — Humidité & vent** : moyennes mensuelles, vent maximal
+- **Page 3 — Détail** : tableau journalier, nombre de jours par mois, **date de la dernière donnée collectée**
 
-> Le dashboard Power BI et ses captures d'écran seront ajoutés après finalisation. Les permissions SQL, de stockage et les règles réseau Azure doivent être correctement configurées pour actualiser les données depuis une autre session.
-
-## Résultats de démonstration
-
-Les sorties sauvegardées des notebooks montrent **six observations uniques**, agrégées sur **deux journées** :
-
-| Date | Température moy. | Temp. min. | Temp. max. | Humidité moy. | Vent moyen | Vent max. | Mesures |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 2026-11-11 | 14,10 °C | 14,10 °C | 14,10 °C | 84,0 % | 3,30 km/h | 3,30 km/h | 1 |
-| 2026-11-12 | 9,04 °C | 8,60 °C | 9,90 °C | 71,4 % | 15,38 km/h | 15,90 km/h | 5 |
-
-La température moyenne de l'ensemble des **six observations**, reconstituée à partir des moyennes quotidiennes pondérées, est d'environ **9,88 °C**. Ces chiffres sont un instantané du jeu de démonstration, et **ne décrivent pas la météo actuelle**.
+Mesures principales : `Temperature_Moyenne` (moyenne simple des journées, l'historique n'ayant pas de nombre de mesures), `Amplitude_Thermique_Max`, `Jours_De_Chaleur` (Tmax ≥ 25 °C), `Derniere_Donnee`.
 
 ## Structure du dépôt
 
 ```text
 .
-├── adf/                  # Pipelines, datasets, services liés et déclencheurs ADF
-├── synapse/              # Notebooks, pipeline Synapse et configurations
-├── sql/
-│   └── create_weather_view.sql
+├── adf/          # Pipelines, datasets, services liés, déclencheur ADF
+├── synapse/      # Notebooks, pipeline, déclencheur, script SQL de contrôle
+├── sql/          # Définitions des vues SQL Serverless
+├── powerbi/      # Rapport Power BI (.pbix)
 └── README.md
 ```
 
-Le dépôt contient les définitions versionnées des ressources ; **il ne contient pas les données RAW/SILVER/GOLD**, stockées dans Azure, ni l'infrastructure complète nécessaire pour les exécuter immédiatement.
+Branches : `main` (collaboration), `adf_publish` et `workspace_publish` (modèles ARM publiés).
 
 ## Reproduire le projet
 
-1. Disposer d'un abonnement Azure autorisé à créer Azure Data Factory, Synapse Analytics, Spark et ADLS Gen2.
-2. Créer/configurer un compte ADLS Gen2 et un conteneur avec des dossiers `raw/`, `silver/`, `gold/` ; adapter les noms de compte et de conteneur codés dans les notebooks.
-3. Configurer les services liés ADF, les autorisations d'accès au Data Lake et les ressources Synapse ; ajuster les paramètres du pool Spark et les règles réseau.
-4. Déployer les définitions ADF et Synapse depuis leurs dossiers respectifs, avec des paramètres propres à l'environnement. **Les fichiers JSON seuls ne constituent pas un déploiement automatique.**
-5. Exécuter l'ingestion Open-Meteo, puis le pipeline de transformation Synapse. Contrôler les sorties et les assertions de qualité.
-6. Créer `WeatherDB` sur le moteur SQL Serverless et, **sur une base de données vierge**, exécuter le script de création de la vue. Ne pas relancer un `CREATE VIEW` sur la vue existante.
-7. Connecter Power BI à l'endpoint SQL Serverless et construire/actualiser les visualisations.
+1. Créer un compte ADLS Gen2 (conteneur `synapse`), une Data Factory et un workspace Synapse avec un pool Spark.
+2. Relier ADF (dossier `/adf`) et Synapse (dossier `/synapse`) à ce dépôt, puis **Publier**.
+3. Donner à l'identité managée d'ADF et de Synapse le rôle *Storage Blob Data Contributor* sur le compte de stockage.
+4. Exécuter une fois `PL_Backfill_OpenMeteo_Historical`, activer les deux déclencheurs.
+5. Dans SQL Serverless, créer la base `WeatherDB` et exécuter les scripts de `sql/`.
+6. Ouvrir le `.pbix`, adapter le serveur SQL si nécessaire et actualiser.
 
-**Sécurité :** ne jamais publier de clés de stockage, secrets, mots de passe ou jetons. Les URL et identifiants de ressources présents dans les exemples ne suffisent pas à accorder un accès. Vérifier également l'historique Git avant de rendre le dépôt public.
+## Limites et perspectives
 
-## Limites et pistes d'amélioration
-
-- **Volume restreint :** la démonstration porte sur deux journées et six observations ; elle ne permet pas de conclusions météorologiques générales.
-- **Planification bornée :** le déclencheur ADF importé a une date de fin ; ce n'est pas un pipeline temps réel permanent.
-- **Orchestration séparée :** l'ingestion ADF ne déclenche pas automatiquement la transformation Synapse dans les définitions analysées.
-- **RAW relu entièrement :** l'ingestion des données dans SILVER pourrait être optimisée avec un suivi incrémental des nouveaux fichiers.
-- **GOLD réécrite :** les agrégations quotidiennes sont recalculées intégralement à chaque exécution.
-- **Tests d'intégration :** isoler le notebook de tests dans un stockage de test et compléter par des tests automatisés non destructifs.
-- **Évolutivité :** enrichir l'historique, ajouter une supervision des exécutions, des alertes et une stratégie de déploiement automatisée.
-
-## Équipe
-
-Projet réalisé à **SUPINFO Paris**, avec une répartition des responsabilités entre **Rayelen Guesmi** et **Tharshan Sivapalan**.
-
----
-
-*Projet académique — novembre 2026. Les services Azure et leurs tarifs, permissions et disponibilités dépendent de l'abonnement utilisé.*
+- Données historiques (agrégats journaliers) et données récentes (mesures au quart d'heure) de natures différentes, distinguées par `data_source`.
+- Pas de données du 13 au 17/11/2026 (collecte interrompue).
+- Latence horaire liée à la planification Synapse ; Power BI en mode Import nécessite une actualisation.
+- Perspectives : actualisation planifiée dans Power BI Service, déclenchement Synapse sur événement de stockage, Terraform, tests en CI, migration vers Microsoft Fabric.
