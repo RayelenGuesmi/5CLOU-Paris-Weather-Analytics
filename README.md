@@ -29,7 +29,7 @@ flowchart TD
 | Ingestion | Azure Data Factory — `TR_OpenMeteo_15min` | toutes les 15 min |
 | Transformation | Synapse Spark (PySpark, Delta Lake) — `TR_Transform_Hourly` | toutes les heures |
 | Exposition | Synapse SQL Serverless — vue `vw_weather_daily_enriched` | lecture directe du GOLD |
-| Visualisation | Power BI Desktop (Import) | à l'actualisation |
+| Visualisation | Power BI Desktop (DirectQuery) | actualisation automatique toutes les minutes |
 
 ## Technologies
 
@@ -105,5 +105,5 @@ Branches : `main` (collaboration), `adf_publish` et `workspace_publish` (modèle
 
 - Données historiques (agrégats journaliers) et données récentes (mesures au quart d'heure) de natures différentes, distinguées par `data_source`.
 - Pas de données du 13 au 17/11/2026 (collecte interrompue).
-- Latence horaire liée à la planification Synapse ; Power BI en mode Import nécessite une actualisation.
+- Latence horaire liée à la planification Synapse ; Power BI (DirectQuery) l'affiche dans la minute qui suit.
 - Perspectives : actualisation planifiée dans Power BI Service, déclenchement Synapse sur événement de stockage, Terraform, tests en CI, migration vers Microsoft Fabric.
