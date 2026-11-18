@@ -83,6 +83,7 @@ Mesures principales : `Temperature_Moyenne` (moyenne simple des journées, l'his
 ```text
 .
 ├── adf/          # Pipelines, datasets, services liés, déclencheur ADF
+├── docs/         # Rapport technique (PDF)
 ├── synapse/      # Notebooks, pipeline, déclencheur, script SQL de contrôle
 ├── sql/          # Définitions des vues SQL Serverless
 ├── powerbi/      # Rapport Power BI (.pbix)
