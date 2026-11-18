@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_OpenMeteo_To_Raw",
+				"name": "Copy_OpenMeteo_Historical_To_Raw",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
