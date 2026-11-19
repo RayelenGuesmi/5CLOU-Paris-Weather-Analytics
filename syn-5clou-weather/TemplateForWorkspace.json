@@ -202,37 +202,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/TR_Transform_Hourly')]",
-			"type": "Microsoft.Synapse/workspaces/triggers",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "PL_Transform_Weather_Silver_Gold",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 60,
-						"startTime": "2026-11-18T18:00:00",
-						"endTime": "2026-11-19T12:00:00",
-						"timeZone": "Romance Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/PL_Transform_Weather_Silver_Gold')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
@@ -2299,6 +2268,37 @@
 			},
 			"dependsOn": [],
 			"location": "germanywestcentral"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/TR_Transform_Hourly')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_Transform_Weather_Silver_Gold",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 60,
+						"startTime": "2026-11-18T18:00:00",
+						"endTime": "2026-11-19T12:00:00",
+						"timeZone": "Romance Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/PL_Transform_Weather_Silver_Gold')]"
+			]
 		}
 	]
 }
